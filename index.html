@@ -1,0 +1,1137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Focus Budget Visualizer</title>
+    <!-- Tailwind CSS v4 Browser CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --font-sans: 'Inter', sans-serif;
+        --font-display: 'Space Grotesk', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+      body {
+        font-family: var(--font-sans);
+        background-color: #090A0F;
+        color: #cbd5e1; /* Slate-300 */
+      }
+      .font-display {
+        font-family: var(--font-display);
+      }
+      .font-mono {
+        font-family: var(--font-mono);
+      }
+      /* Custom thin scrollbar */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 999px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 999px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col justify-between relative overflow-x-hidden selection:bg-cyan-950 selection:text-cyan-300">
+    <!-- Ambient top glow -->
+    <div class="absolute top-0 left-1/4 right-1/4 h-[350px] bg-gradient-to-b from-cyan-500/5 to-transparent blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl w-full mx-auto px-4 py-8 md:py-12 z-10 flex-grow flex flex-col gap-6">
+      
+      <!-- Premium Header Section -->
+      <header class="w-full flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-white/5 gap-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-2xl shadow-lg shadow-cyan-950/20">
+            <!-- SVG Brain Icon -->
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v1.244c0 .41-.195.79-.522 1.025a4.5 4.5 0 0 0-1.896 3.655c0 .762.247 1.467.666 2.038m.352-7.962C9.431 2.22 10.662 1.5 12 1.5s2.569.72 2.852 1.604M12 1.5v3m-.25 15.65v1.244c0 .41.195.79.522 1.025a4.5 4.5 0 0 0 1.896-3.655c0-.762-.247-1.467-.666-2.038m-1.502-4.103a4.5 4.5 0 0 1-1.126-2.923c0-1.244.505-2.37 1.32-3.184m1.308 9.03a4.5 4.5 0 0 1-1.126-2.923c0-1.244.505-2.37 1.32-3.184M15 13.5H9m3-6v9" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[9px] uppercase tracking-[0.25em] text-slate-500 font-bold">Mental Energy Resource</span>
+              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Vanilla Prototype</span>
+            </div>
+            <h1 class="text-2xl font-light tracking-tight text-white mt-0.5">
+              Focus Budget <span class="text-cyan-500 font-semibold">Visualizer</span>
+            </h1>
+          </div>
+        </div>
+
+        <div class="flex gap-6 items-center bg-[#12141C] p-2.5 rounded-2xl border border-white/5 shadow-md self-start md:self-auto">
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-[#090A0F] rounded-xl border border-white/5">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <div class="flex flex-col">
+              <span class="text-[9px] text-slate-500 font-semibold uppercase tracking-wider leading-none mb-0.5">Session Run</span>
+              <span id="session-time" class="text-xs font-mono font-bold text-slate-300">0m 0s</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Grid Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left Column: Visualizer Gauge & States Grid -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+          
+          <!-- Outer energy tracking container -->
+          <div class="flex flex-col gap-4">
+            
+            <!-- Gauge Hero Card -->
+            <div class="relative flex flex-col items-center justify-center p-8 bg-[#12141C] rounded-3xl shadow-lg border border-white/5 overflow-hidden">
+              <!-- Ambient background visual accent reflecting state -->
+              <div id="ambient-glow" class="absolute inset-0 opacity-[0.02] transition-colors duration-500 pointer-events-none bg-slate-500"></div>
+
+              <div class="relative w-[340px] h-[340px] flex items-center justify-center">
+                <!-- Circular Gauge SVG -->
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 360 360">
+                  <!-- Background ring track -->
+                  <circle
+                    cx="180"
+                    cy="180"
+                    r="165"
+                    fill="none"
+                    class="stroke-slate-950"
+                    stroke-width="12"
+                  />
+                  <!-- Main Energy Indicator ring -->
+                  <circle
+                    id="energy-ring"
+                    cx="180"
+                    cy="180"
+                    r="165"
+                    fill="none"
+                    class="stroke-cyan-500 transition-all duration-300"
+                    stroke-width="12"
+                    stroke-dasharray="1036.7"
+                    stroke-dashoffset="0"
+                    stroke-linecap="round"
+                    style="filter: drop-shadow(0 0 6px rgba(6, 182, 212, 0.4));"
+                  />
+                  <!-- Inner Countdown Timer ring -->
+                  <circle
+                    cx="180"
+                    cy="180"
+                    r="140"
+                    fill="none"
+                    class="stroke-slate-950/40"
+                    stroke-width="3"
+                  />
+                  <circle
+                    id="timer-ring"
+                    cx="180"
+                    cy="180"
+                    r="140"
+                    fill="none"
+                    class="stroke-cyan-500/20"
+                    stroke-width="3"
+                    stroke-dasharray="879.6"
+                    stroke-dashoffset="0"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+                <!-- Center Content overlays -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <div class="flex items-center gap-1.5 text-slate-500 font-semibold text-[10px] tracking-widest uppercase">
+                    <svg class="w-3.5 h-3.5 text-cyan-400 fill-cyan-400/20" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L2 14h9v8l10-12h-9z" />
+                    </svg>
+                    <span>Energy Reserve</span>
+                  </div>
+
+                  <div class="flex items-baseline mt-2">
+                    <span id="energy-display" class="font-display font-bold text-7xl tracking-tighter text-white transition-all duration-300">100</span>
+                    <span class="text-slate-500 font-semibold text-xl ml-0.5">%</span>
+                  </div>
+
+                  <!-- Dynamic State badge -->
+                  <span id="state-badge" class="text-[10px] uppercase font-mono tracking-[0.15em] font-semibold mt-4 px-2.5 py-0.5 rounded-full bg-slate-500/10 border border-slate-500/20 text-slate-400 transition-all duration-300">
+                    Paused
+                  </span>
+                </div>
+              </div>
+
+              <!-- Speed & Time Footer -->
+              <div class="mt-6 flex items-center justify-center gap-6 w-full text-sm">
+                <div class="flex items-center gap-2">
+                  <div id="trend-icon-container">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                    </svg>
+                  </div>
+                  <span id="trend-text" class="font-mono text-xs text-slate-400">
+                    Paused
+                  </span>
+                </div>
+
+                <div id="tick-timer-divider" class="h-4 w-px bg-white/5 hidden"></div>
+
+                <div id="tick-countdown-container" class="flex items-center gap-1.5 text-slate-400 font-mono text-xs hidden">
+                  <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                  <span id="tick-countdown-text">Next tick in 5.0s</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Alert Banner -->
+            <div id="alert-banner" class="p-4 rounded-2xl border transition-all duration-500 flex items-start gap-3 bg-cyan-500/10 border-cyan-500/20 text-cyan-400">
+              <div id="alert-icon-container">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.25h.008v.008H12V18.25Zm0-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM4.25 12a7.75 7.75 0 1 1 15.5 0 7.75 7.75 0 0 1-15.5 0Z" />
+                </svg>
+              </div>
+              <div>
+                <h4 id="alert-title" class="font-semibold text-sm leading-none mb-1">Optimal Steady State</h4>
+                <p id="alert-desc" class="text-xs opacity-90 leading-relaxed">Sustained focused operations. Balance deep sprints with routine organization smoothly.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Focus Allocation Toggles Grid -->
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-display font-semibold text-lg text-white">Focus Allocation</h3>
+              <button
+                id="pause-btn"
+                onclick="selectState('idle')"
+                class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-lg transition-all cursor-pointer"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                </svg>
+                <span>Pause Tracker</span>
+              </button>
+            </div>
+
+            <!-- Focus toggles grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              
+              <!-- Deep Work Toggle -->
+              <button
+                id="toggle-deep_work"
+                onclick="selectState('deep_work')"
+                class="relative flex flex-col items-start text-left p-4 rounded-2xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 cursor-pointer group"
+              >
+                <div class="flex items-center justify-between w-full mb-1">
+                  <div class="p-2 rounded-xl bg-slate-900 text-slate-400 group-hover:scale-105 transition-all">
+                    <!-- CPU SVG Icon -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M12 3v1.5m3.75-1.5v1.5M8.25 19.5V21M12 19.5V21m3.75-1.5V21m-12-11.25h1.5m-1.5 3h1.5m15-3h1.5m-1.5 3h1.5M4.875 6.75h14.25m-14.25 10.5h14.25" />
+                    </svg>
+                  </div>
+                  <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-md border bg-slate-900 border-white/5 text-slate-400">-0.5 pts / 5s</span>
+                </div>
+                <div class="mt-2 pl-1">
+                  <h4 class="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors">Deep Work</h4>
+                  <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">High cognitive demand, focused sprint.</p>
+                </div>
+              </button>
+
+              <!-- Admin Toggle -->
+              <button
+                id="toggle-admin"
+                onclick="selectState('admin')"
+                class="relative flex flex-col items-start text-left p-4 rounded-2xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 cursor-pointer group"
+              >
+                <div class="flex items-center justify-between w-full mb-1">
+                  <div class="p-2 rounded-xl bg-slate-900 text-slate-400 group-hover:scale-105 transition-all">
+                    <!-- Mail SVG Icon -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                    </svg>
+                  </div>
+                  <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-md border bg-slate-900 border-white/5 text-slate-400">-0.2 pts / 5s</span>
+                </div>
+                <div class="mt-2 pl-1">
+                  <h4 class="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors">Admin / Email</h4>
+                  <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">Routine coordination and correspondence.</p>
+                </div>
+              </button>
+
+              <!-- Meetings Toggle -->
+              <button
+                id="toggle-meetings"
+                onclick="selectState('meetings')"
+                class="relative flex flex-col items-start text-left p-4 rounded-2xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 cursor-pointer group"
+              >
+                <div class="flex items-center justify-between w-full mb-1">
+                  <div class="p-2 rounded-xl bg-slate-900 text-slate-400 group-hover:scale-105 transition-all">
+                    <!-- Users SVG Icon -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A11.386 11.386 0 0 0 12 19.5a11.38 11.38 0 0 0-3-.263v-.109m0-3.07A9.3 9.3 0 0 0 5.25 16c-.221.082-.437.175-.648.277M9 16.03a9.3 9.3 0 0 0-3 .243m0-1.145c0-1.113.285-2.16.786-3.07" />
+                    </svg>
+                  </div>
+                  <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-md border bg-slate-900 border-white/5 text-slate-400">-1.0 pts / 5s</span>
+                </div>
+                <div class="mt-2 pl-1">
+                  <h4 class="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors">Meetings</h4>
+                  <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">High social energy, alignment, or syncs.</p>
+                </div>
+              </button>
+
+              <!-- Rest Toggle -->
+              <button
+                id="toggle-rest"
+                onclick="selectState('rest')"
+                class="relative flex flex-col items-start text-left p-4 rounded-2xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 cursor-pointer group"
+              >
+                <div class="flex items-center justify-between w-full mb-1">
+                  <div class="p-2 rounded-xl bg-slate-900 text-slate-400 group-hover:scale-105 transition-all">
+                    <!-- Coffee SVG Icon -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v1.244c0 .41-.195.79-.522 1.025a4.5 4.5 0 0 0-1.896 3.655c0 .762.247 1.467.666 2.038m.352-7.962C9.431 2.22 10.662 1.5 12 1.5s2.569.72 2.852 1.604M12 1.5v3" />
+                    </svg>
+                  </div>
+                  <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-md border bg-slate-900 border-white/5 text-slate-400">+0.5 pts / 5s</span>
+                </div>
+                <div class="mt-2 pl-1">
+                  <h4 class="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors">Rest / Break</h4>
+                  <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">Replenishing mental focus and clarity.</p>
+                </div>
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Controls, Sparkline, Ledger logs -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+          
+          <!-- Sandbox Controls Card -->
+          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
+            <div class="flex items-center gap-2">
+              <div class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/10">
+                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-display font-semibold text-base text-white">Prototype Sandbox</h3>
+                <p class="text-xs text-slate-500">Accelerate time or modify state to test the engine</p>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-4">
+              <!-- Manual adjuster triggers -->
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-400">Manual Energy Injection</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button
+                    onclick="adjustEnergy(-10)"
+                    class="flex items-center justify-center gap-1 py-2 text-xs font-medium text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl transition-all cursor-pointer"
+                  >
+                    <span>-10 pts</span>
+                  </button>
+                  <button
+                    onclick="resetEnergy()"
+                    class="flex items-center justify-center gap-1 py-2 text-xs font-semibold text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/25 rounded-xl transition-all cursor-pointer"
+                  >
+                    <span>Reset 100</span>
+                  </button>
+                  <button
+                    onclick="adjustEnergy(10)"
+                    class="flex items-center justify-center gap-1 py-2 text-xs font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-xl transition-all cursor-pointer"
+                  >
+                    <span>+10 pts</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Speed adjustment slider/grid -->
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-semibold text-slate-400">Clock Tick Velocity</label>
+                  <span id="speed-indicator" class="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded">
+                    Normal
+                  </span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 bg-[#090A0F] p-1 rounded-xl border border-white/5">
+                  <button
+                    id="speed-5000"
+                    onclick="setTickSpeed(5000)"
+                    class="py-1.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer bg-[#12141C] text-cyan-400 border border-white/5"
+                  >
+                    Normal (5s)
+                  </button>
+                  <button
+                    id="speed-2000"
+                    onclick="setTickSpeed(2000)"
+                    class="py-1.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200"
+                  >
+                    Fast (2s)
+                  </button>
+                  <button
+                    id="speed-500"
+                    onclick="setTickSpeed(500)"
+                    class="py-1.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200"
+                  >
+                    Turbo (0.5s)
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2 p-3 bg-cyan-950/20 border border-cyan-500/10 rounded-xl">
+                <!-- Info Icon -->
+                <svg class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                </svg>
+                <p class="text-[10px] text-slate-400 leading-normal">
+                  The active state ticks down or up on a repeating loop. Accelerate the velocity using <strong class="text-cyan-400">Turbo</strong> or <strong class="text-cyan-400">Fast</strong> to watch the energy visualizer react to depletion thresholds quickly.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sparkline Chart Card -->
+          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-display font-semibold text-base text-white">Energy Trend</h3>
+                  <p class="text-xs text-slate-500 font-medium">Real-time focus budget depletion curve</p>
+                </div>
+              </div>
+
+              <!-- Min/Max trackers -->
+              <div class="flex items-center gap-3 text-[10px] font-mono">
+                <div class="flex items-center gap-0.5 text-rose-400">
+                  <span id="chart-min">Min: 100%</span>
+                </div>
+                <div class="h-3 w-px bg-white/5"></div>
+                <div class="flex items-center gap-0.5 text-emerald-400">
+                  <span id="chart-max">Max: 100%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SVG Container -->
+            <div class="relative w-full h-[180px] flex items-center justify-center">
+              <!-- Grid Overlay -->
+              <div id="chart-empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-[#090A0F]/50 border-2 border-dashed border-white/5 rounded-2xl">
+                <svg class="w-8 h-8 text-slate-700 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+                </svg>
+                <p class="text-xs text-slate-400 font-medium">Waiting for focus logs...</p>
+                <p class="text-[10px] text-slate-500 mt-1 max-w-[240px]">
+                  Allocating focus to any state generates coordinates.
+                </p>
+              </div>
+
+              <svg id="trend-svg" class="w-full h-full overflow-visible hidden" viewBox="0 0 500 180" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="chartAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.15" />
+                    <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.00" />
+                  </linearGradient>
+                  <linearGradient id="lineGlow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#06b6d4" stop-opacity="1" />
+                    <stop offset="100%" stop-color="#0891b2" stop-opacity="1" />
+                  </linearGradient>
+                </defs>
+                
+                <!-- Y Grid lines will be drawn dynamically in JS -->
+                <g id="svg-grid-lines"></g>
+                <!-- Shaded Area -->
+                <path id="svg-area-path" d="" fill="url(#chartAreaGradient)" />
+                <!-- Line curve -->
+                <path id="svg-line-path" d="" fill="none" stroke="url(#lineGlow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                <!-- Node Points overlay -->
+                <g id="svg-nodes"></g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Focus Audit Counter Card -->
+          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
+            <div class="flex items-center gap-2">
+              <div class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
+                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
+                </svg>
+              </div>
+              <h3 class="font-display font-semibold text-base text-white">Focus Allocation Audits</h3>
+            </div>
+
+            <!-- Focus grid meters -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-3 bg-[#090A0F]/50 rounded-xl border border-white/5 flex flex-col">
+                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Deep Work</span>
+                <span id="dur-deep_work" class="text-sm font-mono font-bold text-slate-200 mt-1">0m 0s</span>
+              </div>
+              <div class="p-3 bg-[#090A0F]/50 rounded-xl border border-white/5 flex flex-col">
+                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Admin / Email</span>
+                <span id="dur-admin" class="text-sm font-mono font-bold text-slate-200 mt-1">0m 0s</span>
+              </div>
+              <div class="p-3 bg-[#090A0F]/50 rounded-xl border border-white/5 flex flex-col">
+                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Meetings</span>
+                <span id="dur-meetings" class="text-sm font-mono font-bold text-slate-200 mt-1">0m 0s</span>
+              </div>
+              <div class="p-3 bg-[#090A0F]/50 rounded-xl border border-white/5 flex flex-col">
+                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Rest / Break</span>
+                <span id="dur-rest" class="text-sm font-mono font-bold text-slate-200 mt-1">0m 0s</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Audit Ledger -->
+          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2Z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-display font-semibold text-base text-white">Audit Ledger</h3>
+                  <p class="text-xs text-slate-500">Historical ledger of energy transactions</p>
+                </div>
+              </div>
+
+              <button
+                id="clear-logs-btn"
+                onclick="clearLedger()"
+                class="hidden text-xs font-semibold text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 px-2.5 py-1.5 rounded-lg border border-transparent hover:border-rose-500/20 transition-all flex items-center gap-1 cursor-pointer"
+              >
+                <span>Clear Ledger</span>
+              </button>
+            </div>
+
+            <!-- Ledger list scroll container -->
+            <div id="ledger-list" class="overflow-y-auto max-h-[220px] pr-1 flex flex-col gap-2 custom-scrollbar">
+              <div id="ledger-empty-state" class="py-12 flex flex-col items-center justify-center text-center text-slate-500 border border-dashed border-white/5 rounded-2xl bg-[#090A0F]/30">
+                <svg class="w-6 h-6 text-slate-700 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                </svg>
+                <p class="text-xs font-medium">No transactions recorded yet.</p>
+                <p class="text-[10px] text-slate-500 mt-1 max-w-[200px]">
+                  Set an active state to generate your first energy ledger entries.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Elegant Footer copyright -->
+    <footer class="border-t border-white/5 py-6 text-center text-xs text-slate-500 bg-[#090A0F] mt-12">
+      <p>© 2026 Focus Budget Engine. Built with premium vector geometry, standard HTML5 & Tailwind CSS.</p>
+    </footer>
+
+    <!-- Standalone Reactive Vanilla Engine -->
+    <script>
+      // State Management
+      const state = {
+        energy: 100,
+        activeState: 'idle',
+        tickInterval: 5000, // default 5s
+        msRemaining: 5000,
+        logs: [
+          {
+            id: 'initial',
+            timestamp: getFormattedTime(),
+            value: 100,
+            state: 'idle',
+            change: 0
+          }
+        ],
+        stateDurations: {
+          idle: 0,
+          deep_work: 0,
+          admin: 0,
+          meetings: 0,
+          rest: 0
+        }
+      };
+
+      // Config definition matching design specs
+      const STATE_CONFIGS = {
+        idle: {
+          name: 'Paused',
+          rate: 0,
+          type: 'neutral',
+          color: 'rgb(148, 163, 184)',
+          badgeBg: 'bg-slate-500/10 border-slate-500/20',
+          badgeText: 'text-slate-400 border-slate-500/20',
+          description: 'Energy tracking is suspended.',
+          icon: 'Pause'
+        },
+        deep_work: {
+          name: 'Deep Work',
+          rate: -0.5,
+          type: 'drain',
+          color: 'rgb(6, 182, 212)', // Cyan
+          badgeBg: 'bg-cyan-500/10 border-cyan-500/20',
+          badgeText: 'text-cyan-400 border-cyan-500/20',
+          description: 'High cognitive demand, focused sprint.',
+          icon: 'Cpu'
+        },
+        admin: {
+          name: 'Admin / Email',
+          rate: -0.2,
+          type: 'drain',
+          color: 'rgb(245, 158, 11)', // Amber
+          badgeBg: 'bg-amber-500/10 border-amber-500/20',
+          badgeText: 'text-amber-400 border-amber-500/20',
+          description: 'Routine coordination and correspondence.',
+          icon: 'Mail'
+        },
+        meetings: {
+          name: 'Meetings',
+          rate: -1.0,
+          type: 'drain',
+          color: 'rgb(239, 68, 68)', // Red
+          badgeBg: 'bg-rose-500/10 border-rose-500/20',
+          badgeText: 'text-rose-400 border-rose-500/20',
+          description: 'High social energy, alignment, or syncs.',
+          icon: 'Users'
+        },
+        rest: {
+          name: 'Rest / Break',
+          rate: 0.5,
+          type: 'charge',
+          color: 'rgb(16, 185, 129)', // Emerald
+          badgeBg: 'bg-emerald-500/10 border-emerald-500/20',
+          badgeText: 'text-emerald-400 border-emerald-500/20',
+          description: 'Replenishing mental focus and clarity.',
+          icon: 'Coffee'
+        }
+      };
+
+      // Format seconds to clock readable duration
+      function formatDuration(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}m ${secs}s`;
+      }
+
+      // Get precise timestamp HH:MM:SS
+      function getFormattedTime() {
+        return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+
+      // Force UI refresh matching dynamic state shifts
+      function updateUI() {
+        const config = STATE_CONFIGS[state.activeState];
+
+        // 1. Update Numeric Energy Display with bounce animation logic
+        const displayEl = document.getElementById('energy-display');
+        const formattedVal = state.energy % 1 === 0 ? state.energy : state.energy.toFixed(1);
+        displayEl.innerText = formattedVal;
+
+        // 2. SVG Main Ring calculation (circumference is 1036.7)
+        const ring = document.getElementById('energy-ring');
+        const circumference = 1036.7;
+        const offset = circumference - (state.energy / 100) * circumference;
+        ring.style.strokeDashoffset = offset;
+        
+        // Dynamically style gauge color
+        const targetColor = state.activeState === 'idle' ? 'rgb(6, 182, 212)' : config.color;
+        ring.style.stroke = targetColor;
+        ring.style.filter = `drop-shadow(0 0 6px ${targetColor}60)`;
+
+        // 3. Ambient inner overlay gradient coloring
+        const ambient = document.getElementById('ambient-glow');
+        ambient.style.backgroundColor = targetColor;
+
+        // 4. Update state indicator badge
+        const badge = document.getElementById('state-badge');
+        badge.innerText = config.name;
+        badge.className = `text-[10px] uppercase font-mono tracking-[0.15em] font-semibold mt-4 px-2.5 py-0.5 rounded-full border transition-all duration-300 ${config.badgeBg} ${config.badgeText}`;
+
+        // 5. Trend display and countdown visibility
+        const trendText = document.getElementById('trend-text');
+        const countdownContainer = document.getElementById('tick-countdown-container');
+        const timerDivider = document.getElementById('tick-timer-divider');
+        const trendIconContainer = document.getElementById('trend-icon-container');
+
+        if (state.activeState === 'idle') {
+          trendText.innerText = 'Paused';
+          trendText.className = 'font-mono text-xs text-slate-500';
+          countdownContainer.classList.add('hidden');
+          timerDivider.classList.add('hidden');
+          trendIconContainer.innerHTML = `
+            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+            </svg>
+          `;
+        } else {
+          countdownContainer.classList.remove('hidden');
+          timerDivider.classList.remove('hidden');
+          const isDrain = config.rate < 0;
+          trendText.innerText = `${isDrain ? '' : '+'}${config.rate} pts / 5s`;
+          trendText.className = `font-mono text-xs font-semibold ${isDrain ? 'text-rose-400' : 'text-emerald-400'}`;
+
+          trendIconContainer.innerHTML = isDrain ? `
+            <svg class="w-5 h-5 text-rose-400 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.94 11.94 0 0 1 4.31 6.365m-.001-9.3v9" />
+            </svg>
+          ` : `
+            <svg class="w-5 h-5 text-emerald-400 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519m-.002 9.3v-9" />
+            </svg>
+          `;
+        }
+
+        // 6. Update inner 5s progress countdown ring (circumference 879.6)
+        const timerRing = document.getElementById('timer-ring');
+        if (state.activeState === 'idle') {
+          timerRing.style.strokeDashoffset = 879.6;
+        } else {
+          const ratio = state.msRemaining / state.tickInterval;
+          timerRing.style.strokeDashoffset = 879.6 * (1 - ratio);
+          timerRing.style.stroke = targetColor;
+          document.getElementById('tick-countdown-text').innerText = `Next tick in ${(state.msRemaining / 1000).toFixed(1)}s`;
+        }
+
+        // 7. Update active styles on Focus Allocation toggles
+        ['deep_work', 'admin', 'meetings', 'rest'].forEach((key) => {
+          const btn = document.getElementById(`toggle-${key}`);
+          const isActive = state.activeState === key;
+          const conf = STATE_CONFIGS[key];
+
+          if (isActive) {
+            btn.className = "relative flex flex-col items-start text-left p-4 rounded-2xl border transition-all duration-300 bg-cyan-500/5 shadow-lg cursor-pointer group";
+            btn.style.borderColor = `${conf.color}50`;
+            // Add custom left active indicator bar
+            const exists = btn.querySelector('.active-accent-bar');
+            if (!exists) {
+              const bar = document.createElement('div');
+              bar.className = 'active-accent-bar absolute left-0 top-3 bottom-3 w-1 rounded-r-full';
+              bar.style.backgroundColor = conf.color;
+              btn.appendChild(bar);
+            }
+          } else {
+            btn.className = "relative flex flex-col items-start text-left p-4 rounded-2xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 cursor-pointer group";
+            btn.style.borderColor = "";
+            const bar = btn.querySelector('.active-accent-bar');
+            if (bar) bar.remove();
+          }
+        });
+
+        // 8. Update Alert Banner based on thresholds
+        const alertBanner = document.getElementById('alert-banner');
+        const alertTitle = document.getElementById('alert-title');
+        const alertDesc = document.getElementById('alert-desc');
+        const alertIconContainer = document.getElementById('alert-icon-container');
+
+        let alertTheme = {};
+        if (state.energy >= 80) {
+          alertTheme = {
+            title: 'Cognitive Peak State',
+            desc: 'Ideal for creative problem solving, strategic synthesis, and high cognitive load sprints.',
+            classes: 'p-4 rounded-2xl border flex items-start gap-3 bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
+            icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.904-8.904m-8.904 0L17.75 3 9 11.25" /></svg>`
+          };
+        } else if (state.energy >= 40) {
+          alertTheme = {
+            title: 'Optimal Steady State',
+            desc: 'Sustained focused operations. Balance deep sprints with routine organization smoothly.',
+            classes: 'p-4 rounded-2xl border flex items-start gap-3 bg-cyan-500/10 border-cyan-500/20 text-cyan-400',
+            icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.25h.008v.008H12V18.25Zm0-4.5h.008v.008H12V13.75Zm0-4.5h.008v.008H12V9.25Z" /></svg>`
+          };
+        } else if (state.energy > 0) {
+          alertTheme = {
+            title: 'Focus Budget Low',
+            desc: 'Decision fatigue is active. Highly recommend transitioning into Rest to avoid burnout.',
+            classes: 'p-4 rounded-2xl border flex items-start gap-3 bg-amber-500/10 border-amber-500/20 text-amber-400',
+            icon: `<svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>`
+          };
+        } else {
+          alertTheme = {
+            title: 'Focus Budget Depleted',
+            desc: 'System critical cognitive exhaustion. Cease work immediately and initiate rest sequence.',
+            classes: 'p-4 rounded-2xl border flex items-start gap-3 bg-rose-500/10 border-rose-500/20 text-rose-400',
+            icon: `<svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v1.244c0 .41-.195.79-.522 1.025a4.5 4.5 0 0 0-1.896 3.655c0 .762.247 1.467.666 2.038m.352-7.962C9.431 2.22 10.662 1.5 12 1.5s2.569.72 2.852 1.604M12 1.5v3" /></svg>`
+          };
+        }
+
+        alertBanner.className = alertTheme.classes;
+        alertTitle.innerText = alertTheme.title;
+        alertDesc.innerText = alertTheme.desc;
+        alertIconContainer.innerHTML = alertTheme.icon;
+
+        // 9. Render session overall time counter
+        const totalSessionSeconds = Object.values(state.stateDurations).reduce((a, b) => a + b, 0);
+        document.getElementById('session-time').innerText = formatDuration(totalSessionSeconds);
+
+        // 10. Render metrics grids
+        ['deep_work', 'admin', 'meetings', 'rest'].forEach((key) => {
+          document.getElementById(`dur-${key}`).innerText = formatDuration(state.stateDurations[key]);
+        });
+
+        // 11. Redraw SVG trend graph
+        redrawTrendGraph();
+
+        // 12. Redraw Ledger table logs
+        redrawLedger();
+      }
+
+      // Redraw Sparkline trend graph manually via standard DOM elements
+      function redrawTrendGraph() {
+        const svg = document.getElementById('trend-svg');
+        const emptyState = document.getElementById('chart-empty-state');
+
+        if (state.logs.length < 2) {
+          svg.classList.add('hidden');
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        svg.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+
+        // Draw grid lines
+        const gridLinesG = document.getElementById('svg-grid-lines');
+        gridLinesG.innerHTML = '';
+        const width = 500;
+        const height = 180;
+        const paddingLeft = 35;
+        const paddingRight = 15;
+        const paddingTop = 15;
+        const paddingBottom = 25;
+
+        // Min/Max metrics
+        const values = state.logs.map(l => l.value);
+        const minVal = Math.min(...values);
+        const maxVal = Math.max(...values);
+        document.getElementById('chart-min').innerText = `Min: ${minVal.toFixed(1)}%`;
+        document.getElementById('chart-max').innerText = `Max: ${maxVal.toFixed(1)}%`;
+
+        // 4 baseline grid intervals (0%, 25%, 50%, 75%, 100%)
+        [0, 25, 50, 75, 100].forEach((level) => {
+          const chartHeight = height - paddingTop - paddingBottom;
+          const y = paddingTop + (1 - level / 100) * chartHeight;
+
+          // Horizontal dashed lines
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', paddingLeft);
+          line.setAttribute('y1', y);
+          line.setAttribute('x2', width - paddingRight);
+          line.setAttribute('y2', y);
+          line.setAttribute('stroke', 'rgba(255, 255, 255, 0.05)');
+          line.setAttribute('stroke-dasharray', '4 4');
+          gridLinesG.appendChild(line);
+
+          // Grid text label
+          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          text.setAttribute('x', paddingLeft - 8);
+          text.setAttribute('y', y + 3);
+          text.setAttribute('fill', '#475569');
+          text.setAttribute('font-size', '9');
+          text.setAttribute('font-family', 'monospace');
+          text.setAttribute('text-anchor', 'end');
+          text.textContent = `${level}%`;
+          gridLinesG.appendChild(text);
+        });
+
+        // Spread points up to last 12 samples
+        const displayLogs = state.logs.slice(-12);
+        const count = displayLogs.length;
+        const chartWidth = width - paddingLeft - paddingRight;
+        const chartHeight = height - paddingTop - paddingBottom;
+
+        const points = displayLogs.map((log, index) => {
+          const x = paddingLeft + (index / Math.max(1, count - 1)) * chartWidth;
+          const y = paddingTop + (1 - log.value / 100) * chartHeight;
+          return { x, y, log };
+        });
+
+        // Set paths
+        let lineD = '';
+        points.forEach((p, i) => {
+          lineD += `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`;
+        });
+
+        const firstPoint = points[0];
+        const lastPoint = points[points.length - 1];
+        const baseHeight = height - paddingBottom;
+        const areaD = `${lineD} L ${lastPoint.x} ${baseHeight} L ${firstPoint.x} ${baseHeight} Z`;
+
+        document.getElementById('svg-line-path').setAttribute('d', lineD);
+        document.getElementById('svg-area-path').setAttribute('d', areaD);
+
+        // Draw interactive nodes
+        const nodesG = document.getElementById('svg-nodes');
+        nodesG.innerHTML = '';
+
+        points.forEach((p, idx) => {
+          const isLast = idx === points.length - 1;
+          const config = STATE_CONFIGS[p.log.state];
+
+          // Add pulsing glow to final node
+          if (isLast) {
+            const glow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            glow.setAttribute('cx', p.x);
+            glow.setAttribute('cy', p.y);
+            glow.setAttribute('r', '7');
+            glow.setAttribute('fill', config.color);
+            glow.setAttribute('fill-opacity', '0.3');
+            glow.className.baseVal = 'animate-ping';
+            nodesG.appendChild(glow);
+          }
+
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', p.x);
+          circle.setAttribute('cy', p.y);
+          circle.setAttribute('r', isLast ? '4' : '3');
+          circle.setAttribute('fill', config.color);
+          circle.setAttribute('stroke', '#12141C');
+          circle.setAttribute('stroke-width', isLast ? '2' : '1.5');
+          nodesG.appendChild(circle);
+
+          // Render timestamps for key positions
+          if (idx === 0 || isLast || idx === Math.floor(points.length / 2)) {
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', p.x);
+            text.setAttribute('y', height - 6);
+            text.setAttribute('fill', '#475569');
+            text.setAttribute('font-size', '8');
+            text.setAttribute('font-family', 'monospace');
+            text.setAttribute('text-anchor', 'middle');
+            text.textContent = p.log.timestamp;
+            nodesG.appendChild(text);
+          }
+        });
+      }
+
+      // Render Transaction change ledger list
+      function redrawLedger() {
+        const list = document.getElementById('ledger-list');
+        const clearBtn = document.getElementById('clear-logs-btn');
+
+        // Capture only logs to show
+        if (state.logs.length === 0) {
+          list.innerHTML = `
+            <div id="ledger-empty-state" class="py-12 flex flex-col items-center justify-center text-center text-slate-500 border border-dashed border-white/5 rounded-2xl bg-[#090A0F]/30">
+              <svg class="w-6 h-6 text-slate-700 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+              <p class="text-xs font-medium">No transactions recorded yet.</p>
+              <p class="text-[10px] text-slate-500 mt-1 max-w-[200px]">
+                Set an active state to generate your first energy ledger entries.
+              </p>
+            </div>
+          `;
+          clearBtn.classList.add('hidden');
+          return;
+        }
+
+        clearBtn.classList.remove('hidden');
+        list.innerHTML = '';
+
+        // Reverse copy list to show newest on top
+        const reversed = [...state.logs].reverse();
+        reversed.forEach((log) => {
+          const config = STATE_CONFIGS[log.state];
+          const isDrain = log.change < 0;
+          const isCharge = log.change > 0;
+
+          const item = document.createElement('div');
+          item.className = "flex items-center justify-between p-3 rounded-xl bg-[#090A0F]/40 border border-white/5 hover:bg-[#1A1D26]/40 transition-all";
+
+          let icon = '';
+          let badgeClass = '';
+          let textPrefix = '';
+
+          if (isDrain) {
+            icon = `
+              <div class="p-1 rounded-lg bg-rose-500/10 text-rose-400">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                </svg>
+              </div>
+            `;
+            badgeClass = "bg-rose-500/10 text-rose-400 border border-rose-500/25";
+          } else if (isCharge) {
+            icon = `
+              <div class="p-1 rounded-lg bg-emerald-500/10 text-emerald-400">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+                </svg>
+              </div>
+            `;
+            badgeClass = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25";
+            textPrefix = '+';
+          } else {
+            icon = `
+              <div class="p-1 rounded-lg bg-slate-800 text-slate-500 font-bold text-[9px] w-5 h-5 flex items-center justify-center">
+                ±
+              </div>
+            `;
+            badgeClass = "bg-slate-800 text-slate-400 border border-white/5";
+          }
+
+          item.innerHTML = `
+            <div class="flex items-center gap-3">
+              ${icon}
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold text-xs text-slate-200">${config ? config.name : 'Unknown'}</span>
+                  <span class="text-[10px] text-slate-500 font-mono">${log.timestamp}</span>
+                </div>
+                <span class="text-[10px] font-mono text-slate-500">Balance: ${log.value.toFixed(1)}%</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="font-mono text-xs font-bold px-2 py-0.5 rounded-md ${badgeClass}">
+                ${textPrefix}${log.change.toFixed(1)}
+              </span>
+            </div>
+          `;
+          list.appendChild(item);
+        });
+      }
+
+      // Set focused state trigger
+      function selectState(stateKey) {
+        state.activeState = stateKey;
+        state.msRemaining = state.tickInterval;
+        updateUI();
+      }
+
+      // Reset total resource state
+      function resetEnergy() {
+        state.energy = 100;
+        state.activeState = 'idle';
+        state.msRemaining = state.tickInterval;
+        state.logs = [
+          {
+            id: `reset-${Date.now()}`,
+            timestamp: getFormattedTime(),
+            value: 100,
+            state: 'idle',
+            change: 0
+          }
+        ];
+        state.stateDurations = {
+          idle: 0,
+          deep_work: 0,
+          admin: 0,
+          meetings: 0,
+          rest: 0
+        };
+        updateUI();
+      }
+
+      // Adjust Energy +/- amount
+      function adjustEnergy(amount) {
+        const prev = state.energy;
+        const next = Math.min(100, Math.max(0, prev + amount));
+        const diff = next - prev;
+
+        if (diff !== 0) {
+          state.energy = next;
+          state.logs.push({
+            id: `manual-${Date.now()}`,
+            timestamp: getFormattedTime(),
+            value: next,
+            state: state.activeState,
+            change: diff
+          });
+          updateUI();
+        }
+      }
+
+      // Set simulation tick velocity
+      function setTickSpeed(ms) {
+        state.tickInterval = ms;
+        state.msRemaining = ms;
+
+        // Toggle speed tabs styling
+        [5000, 2000, 500].forEach((v) => {
+          const tab = document.getElementById(`speed-${v}`);
+          if (v === ms) {
+            tab.className = "py-1.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer bg-[#12141C] text-cyan-400 border border-white/5";
+          } else {
+            tab.className = "py-1.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200";
+          }
+        });
+
+        const ind = document.getElementById('speed-indicator');
+        ind.innerText = ms === 5000 ? 'Normal' : ms === 2000 ? 'Fast' : 'Turbo';
+        updateUI();
+      }
+
+      // Empty Ledger Transactions
+      function clearLedger() {
+        state.logs = [];
+        updateUI();
+      }
+
+      // Core simulation tick interval loop
+      setInterval(() => {
+        const updateRate = 100; // run loop every 100ms
+        
+        // Accumulate active session duration metrics
+        state.stateDurations[state.activeState] += updateRate / 1000;
+
+        if (state.activeState === 'idle') {
+          // Keep runtime updated even if suspended
+          document.getElementById('session-time').innerText = formatDuration(
+            Object.values(state.stateDurations).reduce((a, b) => a + b, 0)
+          );
+          return;
+        }
+
+        // Tally down sub-seconds
+        state.msRemaining -= updateRate;
+        if (state.msRemaining <= 0) {
+          const currentConfig = STATE_CONFIGS[state.activeState];
+          const rate = currentConfig.rate;
+
+          const prev = state.energy;
+          const next = Math.min(100, Math.max(0, prev + rate));
+          const actualChange = next - prev;
+
+          state.energy = next;
+
+          // Push tick coordinate
+          state.logs.push({
+            id: `tick-${Date.now()}`,
+            timestamp: getFormattedTime(),
+            value: next,
+            state: state.activeState,
+            change: actualChange
+          });
+
+          // Reset to limit interval
+          state.msRemaining = state.tickInterval;
+        }
+
+        updateUI();
+      }, 100);
+
+      // Boot Initial UI layout
+      updateUI();
+    </script>
+  </body>
+</html>
