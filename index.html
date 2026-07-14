@@ -19,6 +19,7 @@
         font-family: var(--font-sans);
         background-color: #090A0F;
         color: #cbd5e1; /* Slate-300 */
+        transition: background-color 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .font-display {
         font-family: var(--font-display);
@@ -40,6 +41,83 @@
       }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Cyberpunk Minimalist Theme Styles */
+      .theme-cyberpunk h1, 
+      .theme-cyberpunk h2, 
+      .theme-cyberpunk h3, 
+      .theme-cyberpunk h4,
+      .theme-cyberpunk .font-display {
+        color: #00ffff !important;
+        text-shadow: 0 0 8px rgba(0, 255, 255, 0.4) !important;
+        font-family: var(--font-mono) !important;
+      }
+      .theme-cyberpunk .bg-\[\#12141C\] {
+        background-color: #0c0a14 !important;
+        border-color: #ff007f50 !important;
+        box-shadow: 0 0 15px rgba(255, 0, 127, 0.15) !important;
+      }
+      .theme-cyberpunk .text-white {
+        color: #00ffff !important;
+      }
+      .theme-cyberpunk .text-cyan-500,
+      .theme-cyberpunk .text-cyan-400 {
+        color: #ff007f !important;
+        text-shadow: 0 0 5px rgba(255, 0, 127, 0.3) !important;
+      }
+      .theme-cyberpunk .bg-cyan-500\/10 {
+        background-color: rgba(255, 0, 127, 0.1) !important;
+      }
+      .theme-cyberpunk .border-cyan-500\/20,
+      .theme-cyberpunk .border-white\/5 {
+        border-color: rgba(255, 0, 127, 0.3) !important;
+      }
+      .theme-cyberpunk .stroke-cyan-500 {
+        stroke: #ff007f !important;
+        filter: drop-shadow(0 0 8px #ff007f) !important;
+      }
+      .theme-cyberpunk .bg-slate-900,
+      .theme-cyberpunk .bg-\[\#090A0F\] {
+        background-color: #06050b !important;
+        border-color: rgba(0, 255, 255, 0.25) !important;
+      }
+
+      /* Sage Oasis Theme Styles */
+      .theme-sage h1, 
+      .theme-sage h2, 
+      .theme-sage h3, 
+      .theme-sage h4,
+      .theme-sage .font-display {
+        color: #f5f5f4 !important; /* Soft Cream */
+      }
+      .theme-sage .bg-\[\#12141C\] {
+        background-color: #1a251f !important;
+        border-color: rgba(167, 243, 208, 0.1) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+      }
+      .theme-sage .text-white {
+        color: #f5f5f4 !important;
+      }
+      .theme-sage .text-cyan-500,
+      .theme-sage .text-cyan-400 {
+        color: #34d399 !important; /* Soft Emerald Green */
+      }
+      .theme-sage .bg-cyan-500\/10 {
+        background-color: rgba(52, 211, 153, 0.1) !important;
+      }
+      .theme-sage .border-cyan-500\/20,
+      .theme-sage .border-white\/5 {
+        border-color: rgba(167, 243, 208, 0.15) !important;
+      }
+      .theme-sage .stroke-cyan-500 {
+        stroke: #10b981 !important;
+        filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.3)) !important;
+      }
+      .theme-sage .bg-slate-900,
+      .theme-sage .bg-\[\#090A0F\] {
+        background-color: #111a15 !important;
+        border-color: rgba(167, 243, 208, 0.1) !important;
       }
     </style>
   </head>
@@ -69,7 +147,24 @@
           </div>
         </div>
 
-        <div class="flex gap-6 items-center bg-[#12141C] p-2.5 rounded-2xl border border-white/5 shadow-md self-start md:self-auto">
+        <div class="flex gap-3.5 items-center bg-[#12141C] p-2.5 rounded-2xl border border-white/5 shadow-md self-start md:self-auto">
+          <!-- Preset Visual Theme Selector -->
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-[#090A0F] rounded-xl border border-white/5">
+            <!-- Paint Swatch icon -->
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-1.305-3.579l-1.416-.81a3 3 0 0 1 1.04-5.289l1.417-.183a3 3 0 0 0 2.322-1.3l.8-1.077a3 3 0 0 1 5.3 1.502l.142 1.41a3 3 0 0 0 1.306 2.322l1.078.8a3 3 0 0 1-1.502 5.3l-1.41.142a3 3 0 0 0-2.322 1.306l-.8 1.078a3 3 0 0 1-5.3-1.502l-.142-1.41z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z" />
+            </svg>
+            <div class="flex flex-col">
+              <label for="theme-select" class="text-[9px] text-slate-500 font-semibold uppercase tracking-[0.08em] leading-none mb-0.5">UI Theme</label>
+              <select id="theme-select" onchange="changeTheme(this.value)" class="text-xs font-mono font-bold text-slate-300 bg-transparent border-none outline-none cursor-pointer pr-1">
+                <option value="classic" class="bg-[#12141C] text-slate-300">Classic Dark</option>
+                <option value="cyberpunk" class="bg-[#12141C] text-slate-300">Cyberpunk Minimal</option>
+                <option value="sage" class="bg-[#12141C] text-slate-300">Sage Oasis</option>
+              </select>
+            </div>
+          </div>
+
           <div class="flex items-center gap-2 px-3 py-1.5 bg-[#090A0F] rounded-xl border border-white/5">
             <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -316,88 +411,35 @@
         <!-- Right Column: Controls, Sparkline, Ledger logs -->
         <div class="lg:col-span-5 flex flex-col gap-6">
           
-          <!-- Sandbox Controls Card -->
+          <!-- Quick Energy Overrides Card -->
           <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
             <div class="flex items-center gap-2">
-              <div class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/10">
+              <div class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">
                 <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
                 </svg>
               </div>
               <div>
-                <h3 class="font-display font-semibold text-base text-white">Prototype Sandbox</h3>
-                <p class="text-xs text-slate-500">Accelerate time or modify state to test the engine</p>
+                <h3 class="font-display font-semibold text-base text-white">Quick Energy Overrides</h3>
+                <p class="text-xs text-slate-500 font-medium">Trigger immediate focus resource shifts</p>
               </div>
             </div>
 
-            <div class="flex flex-col gap-4">
-              <!-- Manual adjuster triggers -->
-              <div class="flex flex-col gap-2">
-                <label class="text-xs font-semibold text-slate-400">Manual Energy Injection</label>
-                <div class="grid grid-cols-3 gap-2">
-                  <button
-                    onclick="adjustEnergy(-10)"
-                    class="flex items-center justify-center gap-1 py-2 text-xs font-medium text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl transition-all cursor-pointer"
-                  >
-                    <span>-10 pts</span>
-                  </button>
-                  <button
-                    onclick="resetEnergy()"
-                    class="flex items-center justify-center gap-1 py-2 text-xs font-semibold text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/25 rounded-xl transition-all cursor-pointer"
-                  >
-                    <span>Reset 100</span>
-                  </button>
-                  <button
-                    onclick="adjustEnergy(10)"
-                    class="flex items-center justify-center gap-1 py-2 text-xs font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-xl transition-all cursor-pointer"
-                  >
-                    <span>+10 pts</span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Speed adjustment slider/grid -->
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center justify-between">
-                  <label class="text-xs font-semibold text-slate-400">Clock Tick Velocity</label>
-                  <span id="speed-indicator" class="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded">
-                    Normal
-                  </span>
-                </div>
-                <div class="grid grid-cols-3 gap-2 bg-[#090A0F] p-1 rounded-xl border border-white/5">
-                  <button
-                    id="speed-5000"
-                    onclick="setTickSpeed(5000)"
-                    class="py-1.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer bg-[#12141C] text-cyan-400 border border-white/5"
-                  >
-                    Normal (5s)
-                  </button>
-                  <button
-                    id="speed-2000"
-                    onclick="setTickSpeed(2000)"
-                    class="py-1.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200"
-                  >
-                    Fast (2s)
-                  </button>
-                  <button
-                    id="speed-500"
-                    onclick="setTickSpeed(500)"
-                    class="py-1.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200"
-                  >
-                    Turbo (0.5s)
-                  </button>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-2 p-3 bg-cyan-950/20 border border-cyan-500/10 rounded-xl">
-                <!-- Info Icon -->
-                <svg class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                </svg>
-                <p class="text-[10px] text-slate-400 leading-normal">
-                  The active state ticks down or up on a repeating loop. Accelerate the velocity using <strong class="text-cyan-400">Turbo</strong> or <strong class="text-cyan-400">Fast</strong> to watch the energy visualizer react to depletion thresholds quickly.
-                </p>
-              </div>
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                onclick="quickOverride('coffee')"
+                class="flex items-center justify-center gap-2 py-3 px-4 text-xs font-semibold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-2xl transition-all cursor-pointer group active:scale-95"
+              >
+                <span class="text-base group-hover:scale-110 transition-transform">☕</span>
+                <span>Drink Coffee (+15)</span>
+              </button>
+              <button
+                onclick="quickOverride('emergency')"
+                class="flex items-center justify-center gap-2 py-3 px-4 text-xs font-semibold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-2xl transition-all cursor-pointer group active:scale-95"
+              >
+                <span class="text-base group-hover:scale-110 transition-transform">🚨</span>
+                <span>Emergency (-20)</span>
+              </button>
             </div>
           </div>
 
@@ -441,7 +483,7 @@
                 </p>
               </div>
 
-              <svg id="trend-svg" class="w-full h-full overflow-visible hidden" viewBox="0 0 500 180" preserveAspectRatio="none">
+              <svg id="trend-svg" class="w-full h-full overflow-hidden hidden" viewBox="0 0 500 180" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id="chartAreaGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.15" />
@@ -451,16 +493,19 @@
                     <stop offset="0%" stop-color="#06b6d4" stop-opacity="1" />
                     <stop offset="100%" stop-color="#0891b2" stop-opacity="1" />
                   </linearGradient>
+                  <clipPath id="chart-viewport-clip">
+                    <rect x="35" y="0" width="440" height="180" />
+                  </clipPath>
                 </defs>
                 
                 <!-- Y Grid lines will be drawn dynamically in JS -->
                 <g id="svg-grid-lines"></g>
                 <!-- Shaded Area -->
-                <path id="svg-area-path" d="" fill="url(#chartAreaGradient)" />
+                <path id="svg-area-path" d="" fill="url(#chartAreaGradient)" clip-path="url(#chart-viewport-clip)" />
                 <!-- Line curve -->
-                <path id="svg-line-path" d="" fill="none" stroke="url(#lineGlow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path id="svg-line-path" d="" fill="none" stroke="url(#lineGlow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" clip-path="url(#chart-viewport-clip)" />
                 <!-- Node Points overlay -->
-                <g id="svg-nodes"></g>
+                <g id="svg-nodes" clip-path="url(#chart-viewport-clip)"></g>
               </svg>
             </div>
           </div>
@@ -539,6 +584,100 @@
 
       </div>
 
+      <!-- Sandbox Controls Card (Full-width Utility Footer) -->
+      <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col lg:flex-row items-stretch gap-6 mt-6 w-full">
+        
+        <!-- Left Info Block -->
+        <div class="flex flex-col gap-3 lg:w-1/3 justify-between">
+          <div class="flex items-center gap-2">
+            <div class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/10">
+              <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-display font-semibold text-base text-white">Prototype Sandbox</h3>
+              <p class="text-xs text-slate-500">Accelerate time or modify state to test the engine</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2 p-3 bg-cyan-950/20 border border-cyan-500/10 rounded-xl">
+            <!-- Info Icon -->
+            <svg class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+            <p class="text-[10px] text-slate-400 leading-normal">
+              The active state ticks down or up on a repeating loop. Accelerate the velocity using <strong class="text-cyan-400">Turbo</strong> or <strong class="text-cyan-400">Fast</strong> to watch the energy visualizer react to depletion thresholds quickly.
+            </p>
+          </div>
+        </div>
+
+        <!-- Vertical Divider (hidden on mobile) -->
+        <div class="hidden lg:block w-px bg-white/5"></div>
+
+        <!-- Middle Block: Manual adjusters -->
+        <div class="flex flex-col gap-2.5 justify-center lg:w-1/3">
+          <label class="text-xs font-semibold text-slate-400">Manual Energy Injection</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button
+              onclick="adjustEnergy(-10)"
+              class="flex items-center justify-center gap-1 py-3 text-xs font-semibold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl transition-all cursor-pointer active:scale-95"
+            >
+              <span>-10 pts</span>
+            </button>
+            <button
+              onclick="resetEnergy()"
+              class="flex items-center justify-center gap-1 py-3 text-xs font-bold text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/25 rounded-xl transition-all cursor-pointer active:scale-95"
+            >
+              <span>Reset 100</span>
+            </button>
+            <button
+              onclick="adjustEnergy(10)"
+              class="flex items-center justify-center gap-1 py-3 text-xs font-semibold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-xl transition-all cursor-pointer active:scale-95"
+            >
+              <span>+10 pts</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Vertical Divider (hidden on mobile) -->
+        <div class="hidden lg:block w-px bg-white/5"></div>
+
+        <!-- Right Block: Clock tick velocity selection -->
+        <div class="flex flex-col gap-2.5 justify-center lg:w-1/3">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-400">Clock Tick Velocity</label>
+            <span id="speed-indicator" class="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded">
+              Normal
+            </span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 bg-[#090A0F] p-1 rounded-xl border border-white/5">
+            <button
+              id="speed-5000"
+              onclick="setTickSpeed(5000)"
+              class="py-2.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer bg-[#12141C] text-cyan-400 border border-white/5"
+            >
+              Normal (5s)
+            </button>
+            <button
+              id="speed-2000"
+              onclick="setTickSpeed(2000)"
+              class="py-2.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200"
+            >
+              Fast (2s)
+            </button>
+            <button
+              id="speed-500"
+              onclick="setTickSpeed(500)"
+              class="py-2.5 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200"
+            >
+              Turbo (0.5s)
+            </button>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
     <!-- Elegant Footer copyright -->
@@ -554,6 +693,7 @@
         activeState: 'idle',
         tickInterval: 5000, // default 5s
         msRemaining: 5000,
+        selectedTheme: 'classic', // Chosen default theme
         logs: [
           {
             id: 'initial',
@@ -571,6 +711,75 @@
           rest: 0
         }
       };
+
+      // Visual Theme state colors for background shifter
+      const THEME_STATE_COLORS = {
+        classic: {
+          idle: '#090A0F',
+          deep_work: '#081125', // Soft deep dark blue
+          admin: '#13161c',     // Charcoal slate
+          meetings: '#1a1114',  // Subtle warm crimson slate tint
+          rest: '#0a1612'       // Restful deep sage-green slate
+        },
+        cyberpunk: {
+          idle: '#050508',
+          deep_work: '#020516', // Cyber neon blue/black
+          admin: '#0a0812',     // Cyber deep indigo charcoal
+          meetings: '#180410',  // Cyber warm neon crimson tint
+          rest: '#02120e'       // Cyber deep forest green
+        },
+        sage: {
+          idle: '#141c18',
+          deep_work: '#0e1d18', // Deep sage focus
+          admin: '#18221c',     // Warm sage slate
+          meetings: '#221c1a',  // Teracotta warm hint
+          rest: '#11261c'       // Forest break green
+        }
+      };
+
+      // Set global UI theme class on html/body elements
+      function changeTheme(themeValue) {
+        state.selectedTheme = themeValue;
+        
+        // Remove existing theme classes
+        document.documentElement.classList.remove('theme-classic', 'theme-cyberpunk', 'theme-sage');
+        
+        // Add selected theme class
+        document.documentElement.classList.add(`theme-${themeValue}`);
+        
+        updateUI();
+      }
+
+      // Quick energy override actions
+      function quickOverride(type) {
+        const prev = state.energy;
+        let amount = 0;
+        let label = '';
+        
+        if (type === 'coffee') {
+          amount = 15;
+          label = 'Drink Coffee Boost';
+        } else if (type === 'emergency') {
+          amount = -20;
+          label = 'Unplanned Emergency';
+        }
+
+        const next = Math.min(100, Math.max(0, prev + amount));
+        const diff = next - prev;
+
+        if (diff !== 0) {
+          state.energy = next;
+          state.logs.push({
+            id: `override-${Date.now()}`,
+            timestamp: getFormattedTime(),
+            value: next,
+            state: state.activeState,
+            change: diff,
+            label: label
+          });
+          updateUI();
+        }
+      }
 
       // Config definition matching design specs
       const STATE_CONFIGS = {
@@ -641,6 +850,11 @@
       // Force UI refresh matching dynamic state shifts
       function updateUI() {
         const config = STATE_CONFIGS[state.activeState];
+
+        // Dynamic state-based background color shifting
+        const theme = state.selectedTheme || 'classic';
+        const stateBgColor = THEME_STATE_COLORS[theme][state.activeState];
+        document.body.style.setProperty('background-color', stateBgColor, 'important');
 
         // 1. Update Numeric Energy Display with bounce animation logic
         const displayEl = document.getElementById('energy-display');
@@ -815,7 +1029,7 @@
         const width = 500;
         const height = 180;
         const paddingLeft = 35;
-        const paddingRight = 15;
+        const paddingRight = 25; // Extra padding for pulsing glows on the right boundary
         const paddingTop = 15;
         const paddingBottom = 25;
 
@@ -860,8 +1074,12 @@
         const chartHeight = height - paddingTop - paddingBottom;
 
         const points = displayLogs.map((log, index) => {
-          const x = paddingLeft + (index / Math.max(1, count - 1)) * chartWidth;
-          const y = paddingTop + (1 - log.value / 100) * chartHeight;
+          const rawX = paddingLeft + (index / Math.max(1, count - 1)) * chartWidth;
+          const rawY = paddingTop + (1 - log.value / 100) * chartHeight;
+          
+          // Mathematically restrict points inside the chart's strict boundaries
+          const x = Math.max(paddingLeft, Math.min(width - paddingRight, rawX));
+          const y = Math.max(paddingTop, Math.min(height - paddingBottom, rawY));
           return { x, y, log };
         });
 
@@ -990,12 +1208,14 @@
             badgeClass = "bg-slate-800 text-slate-400 border border-white/5";
           }
 
+          const transactionName = log.label || (config ? config.name : 'Unknown');
+
           item.innerHTML = `
             <div class="flex items-center gap-3">
               ${icon}
               <div>
                 <div class="flex items-center gap-2">
-                  <span class="font-semibold text-xs text-slate-200">${config ? config.name : 'Unknown'}</span>
+                  <span class="font-semibold text-xs text-slate-200">${transactionName}</span>
                   <span class="text-[10px] text-slate-500 font-mono">${log.timestamp}</span>
                 </div>
                 <span class="text-[10px] font-mono text-slate-500">Balance: ${log.value.toFixed(1)}%</span>
