@@ -104,25 +104,37 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-2.5 px-4 py-2.5 bg-[#12141C] rounded-2xl border border-white/5 shadow-md">
-          <svg class="w-4.5 h-4.5 text-slate-500 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-          <div class="flex flex-col">
-            <span class="text-[9px] text-slate-500 font-semibold uppercase tracking-wider leading-none mb-0.5">Session Run</span>
-            <span id="session-time" class="text-xs font-mono font-bold text-slate-300">0m 0s</span>
+        <div class="flex flex-wrap items-center gap-3.5">
+          <!-- Focus Streak tracker -->
+          <div class="flex items-center gap-2 px-3.5 py-1.5 bg-[#12141C] rounded-xl border border-white/5 shadow-md">
+            <span class="text-amber-500 font-bold text-sm">🔥</span>
+            <div class="flex flex-col">
+              <span class="text-[9px] text-slate-500 font-semibold uppercase tracking-wider leading-none mb-0.5">Focus Streak</span>
+              <span id="streak-counter" class="text-xs font-mono font-bold text-amber-400">0 Sprints</span>
+            </div>
+          </div>
+
+          <!-- Session Run duration counter -->
+          <div class="flex items-center gap-2 px-3.5 py-1.5 bg-[#12141C] rounded-xl border border-white/5 shadow-md">
+            <svg class="w-4 h-4 text-slate-500 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <div class="flex flex-col">
+              <span class="text-[9px] text-slate-500 font-semibold uppercase tracking-wider leading-none mb-0.5">Session Run</span>
+              <span id="session-time" class="text-xs font-mono font-bold text-slate-300">0m 0s</span>
+            </div>
           </div>
         </div>
       </header>
 
-      <!-- Dashboard Grid Layout (3-Row Layout Structure) -->
-      <div class="flex flex-col gap-6">
+      <!-- Dashboard Grid Layout (3-Column Layout Structure) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch w-full">
 
-        <!-- ROW 1: TOP ROW (3-Column Grid) -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+        <!-- LEFT COLUMN (Width ~25% / col-span-3) -->
+        <div class="lg:col-span-3 flex flex-col gap-6 w-full">
           
-          <!-- Column 1: Theme Shifter Container -->
-          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col justify-between h-full gap-5">
+          <!-- Theme Shifter Card -->
+          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col justify-between gap-4">
             <div>
               <div class="flex items-center gap-2 mb-3">
                 <div class="p-2 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl">
@@ -145,247 +157,52 @@
                 <div class="relative bg-[#090A0F] rounded-xl border border-white/5 p-2.5">
                   <select id="theme-select-card" onchange="changeTheme(this.value)" class="w-full text-xs font-mono font-bold text-slate-300 bg-transparent border-none outline-none cursor-pointer">
                     <option value="classic" class="bg-[#12141C] text-slate-300">Classic Dark</option>
-                    <option value="cyberpunk" class="bg-[#12141C] text-slate-300">Cyberpunk Minimal</option>
+                    <option value="cyberpunk" class="bg-[#12141C] text-slate-300">Cyberpunk Minimalist</option>
                     <option value="sage" class="bg-[#12141C] text-slate-300">Sage Oasis</option>
                   </select>
                 </div>
               </div>
             </div>
-
-            <!-- Nested Dynamic Alert Banner -->
-            <div id="alert-banner" class="p-4 rounded-2xl border transition-all duration-500 flex items-start gap-3 bg-cyan-500/10 border-cyan-500/20 text-cyan-400">
-              <div id="alert-icon-container">
-                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.25h.008v.008H12V18.25Zm0-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM4.25 12a7.75 7.75 0 1 1 15.5 0 7.75 7.75 0 0 1-15.5 0Z" />
-                </svg>
-              </div>
-              <div class="flex-grow">
-                <h4 id="alert-title" class="font-semibold text-xs leading-none mb-1">Optimal Steady State</h4>
-                <p id="alert-desc" class="text-[11px] opacity-90 leading-normal">Sustained focus. Balance deep sprints with rest sessions.</p>
-              </div>
-            </div>
           </div>
 
-          <!-- Column 2: Centered Circular Gauge (Transparent & Borderless) -->
-          <div class="relative flex flex-col items-center justify-center p-4 overflow-hidden min-h-[420px]">
-            <div class="relative w-[300px] h-[300px] flex items-center justify-center">
-              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 360 360">
-                <circle cx="180" cy="180" r="165" fill="none" class="stroke-slate-950/60" stroke-width="12" />
-                <circle id="energy-ring" cx="180" cy="180" r="165" fill="none" class="stroke-cyan-500 transition-all duration-300" stroke-width="12" stroke-dasharray="1036.7" stroke-dashoffset="0" stroke-linecap="round" style="filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.4));" />
-                <circle cx="180" cy="180" r="140" fill="none" class="stroke-slate-950/20" stroke-width="3" />
-                <circle id="timer-ring" cx="180" cy="180" r="140" fill="none" class="stroke-cyan-500/20" stroke-width="3" stroke-dasharray="879.6" stroke-dashoffset="0" stroke-linecap="round" />
-              </svg>
-
-              <!-- Center overlays -->
-              <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <div class="flex items-center gap-1.5 text-slate-500 font-semibold text-[10px] tracking-widest uppercase">
-                  <svg class="w-3.5 h-3.5 text-cyan-400 fill-cyan-400/20 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L2 14h9v8l10-12h-9z" />
-                  </svg>
-                  <span>Energy</span>
-                </div>
-                <div class="flex items-baseline mt-1.5">
-                  <span id="energy-display" class="font-display font-bold text-7xl tracking-tighter text-white transition-all duration-300">100</span>
-                  <span class="text-slate-500 font-semibold text-2xl ml-0.5">%</span>
-                </div>
-                <span id="state-badge" class="text-[10px] uppercase font-mono tracking-[0.15em] font-semibold mt-3 px-2.5 py-0.5 rounded-full bg-slate-500/10 border border-slate-500/20 text-slate-400 transition-all duration-300">
-                  Paused
-                </span>
-              </div>
-            </div>
-
-            <!-- Horizontal Active State Selector Row -->
-            <div class="w-full mt-6 flex flex-col gap-3">
-              <div class="flex flex-wrap items-center justify-center gap-2">
-                <button id="pause-btn" onclick="selectState('idle')" class="flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 hover:border-amber-500/40 rounded-xl transition-all cursor-pointer active:scale-95">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
-                  </svg>
-                  <span>Pause</span>
-                </button>
-
-                <button id="toggle-deep_work" onclick="selectState('deep_work')" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 hover:border-white/10 cursor-pointer text-xs font-semibold text-slate-300 hover:text-white active:scale-95">
-                  <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-                  <span>Deep Work</span>
-                </button>
-
-                <button id="toggle-admin" onclick="selectState('admin')" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 hover:border-white/10 cursor-pointer text-xs font-semibold text-slate-300 hover:text-white active:scale-95">
-                  <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                  <span>Email</span>
-                </button>
-
-                <button id="toggle-meetings" onclick="selectState('meetings')" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 hover:border-white/10 cursor-pointer text-xs font-semibold text-slate-300 hover:text-white active:scale-95">
-                  <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-                  <span>Meetings</span>
-                </button>
-
-                <button id="toggle-rest" onclick="selectState('rest')" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 hover:border-white/10 cursor-pointer text-xs font-semibold text-slate-300 hover:text-white active:scale-95">
-                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                  <span>Rest</span>
-                </button>
-              </div>
-
-              <!-- Speed & Time details -->
-              <div class="flex items-center justify-center gap-3 text-xs text-slate-500 font-mono mt-1">
-                <div class="flex items-center gap-1">
-                  <div id="trend-icon-container">
-                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
-                    </svg>
-                  </div>
-                  <span id="trend-text">Paused</span>
-                </div>
-                <div id="tick-timer-divider" class="h-3 w-px bg-white/10 hidden"></div>
-                <div id="tick-countdown-container" class="flex items-center gap-1 hidden">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                  </svg>
-                  <span id="tick-countdown-text">5.0s</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Column 3: Vibe & Aesthetic Controls (Overrides + Ledger) -->
-          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col justify-between h-full gap-4">
-            <div>
-              <div class="flex items-center gap-2 mb-3">
-                <div class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">
-                  <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 class="font-display font-semibold text-base text-white">Vibe Controls</h3>
-                  <p class="text-[11px] text-slate-500 font-medium">Quick energy injections</p>
-                </div>
-              </div>
-
-              <!-- Quick Overrides Pill Outlines -->
-              <div class="grid grid-cols-2 gap-3">
-                <button onclick="quickOverride('coffee')" class="flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/15 border-2 border-emerald-500/30 hover:border-emerald-500/60 rounded-full transition-all cursor-pointer active:scale-95 shadow-[0_0_8px_rgba(16,185,129,0.1)]">
-                  <span>☕ Coffee +15</span>
-                </button>
-                <button onclick="quickOverride('emergency')" class="flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold text-rose-400 bg-rose-500/5 hover:bg-rose-500/15 border-2 border-rose-500/30 hover:border-rose-500/60 rounded-full transition-all cursor-pointer active:scale-95 shadow-[0_0_8px_rgba(244,63,94,0.1)]">
-                  <span>🚨 Emergency -20</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="h-px bg-white/5"></div>
-
-            <!-- Ledger area -->
-            <div class="flex flex-col gap-2.5 flex-grow">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-1.5">
-                  <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2Z" />
-                  </svg>
-                  <span class="text-xs font-bold text-slate-300">Audit Ledger</span>
-                </div>
-                <button id="clear-logs-btn" onclick="clearLedger()" class="hidden text-[10px] text-slate-500 hover:text-rose-400 cursor-pointer">Clear</button>
-              </div>
-
-              <!-- Scrollable Ledger list -->
-              <div id="ledger-list" class="overflow-y-auto max-h-[140px] pr-1 flex flex-col gap-2 custom-scrollbar">
-                <div id="ledger-empty-state" class="py-6 flex flex-col items-center justify-center text-center text-slate-600 border border-dashed border-white/5 rounded-2xl bg-[#090A0F]/30">
-                  <p class="text-[10px] font-medium">No transactions yet.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- ROW 2: MIDDLE ROW (3-Column Grid, balanced heights) -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-          
-          <!-- Card 1: Dynamic Energy Bar Chart -->
+          <!-- Card 4: Audit Ledger Card -->
           <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
-            <div class="flex items-center gap-2">
-              <div class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18V6a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 6v3.75m-18 0h14.25" />
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2Z" />
                 </svg>
-              </div>
-              <div>
-                <h3 class="font-display font-semibold text-base text-white">Dynamic Energy Bar</h3>
-                <p class="text-xs text-slate-500 font-medium">Real-time state allocation log</p>
-              </div>
-            </div>
-
-            <div class="relative w-full h-[180px] flex items-center justify-center">
-              <div id="bar-chart-empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-[#090A0F]/50 border-2 border-dashed border-white/5 rounded-2xl z-[5]">
-                <p class="text-xs text-slate-400 font-medium">Waiting for focus logs...</p>
-              </div>
-              <svg id="bar-svg" class="w-full h-full overflow-hidden hidden" viewBox="0 0 500 180" preserveAspectRatio="none"></svg>
-            </div>
-          </div>
-
-          <!-- Card 2: Energy Trend Line Chart -->
-          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <div class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 class="font-display font-semibold text-base text-white">Energy Trend</h3>
-                  <p class="text-xs text-slate-500 font-medium">Budget depletion curve</p>
+                <div class="min-w-0">
+                  <h3 class="font-display font-semibold text-base text-white truncate">Audit Ledger</h3>
+                  <p class="text-[11px] text-slate-500 font-medium truncate font-mono">History Log</p>
                 </div>
               </div>
-
-              <div class="flex items-center gap-2 text-[10px] font-mono text-slate-500">
-                <span id="chart-min" class="text-rose-400">Min: 100%</span>
-                <span>/</span>
-                <span id="chart-max" class="text-emerald-400">Max: 100%</span>
-              </div>
+              <button id="clear-logs-btn" onclick="clearLedger()" class="hidden text-[10px] text-slate-500 hover:text-rose-400 cursor-pointer shrink-0">Clear</button>
             </div>
 
-            <div class="relative w-full h-[180px] flex items-center justify-center">
-              <div id="chart-empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-[#090A0F]/50 border-2 border-dashed border-white/5 rounded-2xl z-[5]">
-                <p class="text-xs text-slate-400 font-medium">Waiting for coordinates...</p>
+            <!-- Scrollable Ledger list -->
+            <div id="ledger-list" class="overflow-y-auto max-h-[140px] pr-1 flex flex-col gap-2 custom-scrollbar min-h-[100px]">
+              <div id="ledger-empty-state" class="py-6 flex flex-col items-center justify-center text-center text-slate-600 border border-dashed border-white/5 rounded-2xl bg-[#090A0F]/30">
+                <p class="text-[10px] font-medium">No transactions yet.</p>
               </div>
-
-              <svg id="trend-svg" class="w-full h-full overflow-hidden hidden" viewBox="0 0 500 180" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="chartAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.15" />
-                    <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.00" />
-                  </linearGradient>
-                  <linearGradient id="lineGlow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#06b6d4" stop-opacity="1" />
-                    <stop offset="100%" stop-color="#0891b2" stop-opacity="1" />
-                  </linearGradient>
-                  <clipPath id="chart-viewport-clip">
-                    <rect x="45" y="0" width="420" height="180" />
-                  </clipPath>
-                </defs>
-                <g id="svg-grid-lines"></g>
-                <path id="svg-area-path" d="" fill="url(#chartAreaGradient)" clip-path="url(#chart-viewport-clip)" />
-                <path id="svg-line-path" d="" fill="none" stroke="url(#lineGlow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" clip-path="url(#chart-viewport-clip)" />
-                <g id="svg-nodes" clip-path="url(#chart-viewport-clip)"></g>
-              </svg>
             </div>
           </div>
 
           <!-- Card 3: Time Distribution progress metrics -->
-          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4 h-full">
+          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
             <div class="flex items-center gap-2">
-              <div class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
+              <div class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 shrink-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6z" />
                 </svg>
               </div>
-              <div>
-                <h3 class="font-display font-semibold text-base text-white">Time Distribution</h3>
-                <p class="text-xs text-slate-500 font-medium">Resource allocation breakdown</p>
+              <div class="min-w-0">
+                <h3 class="font-display font-semibold text-base text-white truncate">Time Distribution</h3>
+                <p class="text-xs text-slate-500 font-medium truncate">Resource allocation breakdown</p>
               </div>
             </div>
 
-            <div class="flex-grow flex flex-col justify-between gap-2.5 mt-1">
+            <div class="flex flex-col gap-3">
               <!-- Deep Work Percentage -->
               <div class="flex flex-col gap-1">
                 <div class="flex justify-between items-center text-xs">
@@ -450,56 +267,266 @@
 
         </div>
 
-        <!-- ROW 3: BOTTOM ROW (Full Width Sandbox) -->
-        <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col lg:flex-row items-stretch gap-6 w-full">
+        <!-- CENTER COLUMN (Width ~45% / col-span-5 - Borderless/Transparent) -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-start p-4 pt-0 bg-transparent border-none w-full">
           
-          <div class="flex flex-col gap-3 lg:w-1/3 justify-between">
+          <!-- Cohesive Center Column Content Stack -->
+          <div class="flex flex-col items-center gap-4 w-full max-w-md">
+            
+            <!-- Visual Circular Ring Gauge -->
+            <div class="relative w-[300px] h-[300px] flex items-center justify-center shrink-0">
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 360 360">
+                <circle cx="180" cy="180" r="165" fill="none" class="stroke-slate-950/60" stroke-width="12" />
+                <circle id="energy-ring" cx="180" cy="180" r="165" fill="none" class="stroke-cyan-500 transition-all duration-300" stroke-width="12" stroke-dasharray="1036.7" stroke-dashoffset="0" stroke-linecap="round" style="filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.4));" />
+                <circle cx="180" cy="180" r="140" fill="none" class="stroke-slate-950/20" stroke-width="3" />
+                <circle id="timer-ring" cx="180" cy="180" r="140" fill="none" class="stroke-cyan-500/20" stroke-width="3" stroke-dasharray="879.6" stroke-dashoffset="0" stroke-linecap="round" />
+              </svg>
+
+              <!-- Center overlays -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <div class="flex items-center gap-1.5 text-slate-500 font-semibold text-[10px] tracking-widest uppercase">
+                  <svg class="w-3.5 h-3.5 text-cyan-400 fill-cyan-400/20 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L2 14h9v8l10-12h-9z" />
+                  </svg>
+                  <span>Energy</span>
+                </div>
+                <div class="flex items-baseline mt-1.5">
+                  <span id="energy-display" class="font-display font-bold text-7xl tracking-tighter text-white transition-all duration-300">100</span>
+                  <span class="text-slate-500 font-semibold text-2xl ml-0.5">%</span>
+                </div>
+                <span id="state-badge" class="text-[10px] uppercase font-mono tracking-[0.15em] font-semibold mt-3 px-2.5 py-0.5 rounded-full bg-slate-500/10 border border-slate-500/20 text-slate-400 transition-all duration-300">
+                  Paused
+                </span>
+              </div>
+            </div>
+
+            <!-- Active State Selector Row -->
+            <div class="w-full flex flex-col gap-3">
+              <div class="flex flex-wrap items-center justify-center gap-2">
+                <button id="pause-btn" onclick="selectState('idle')" class="flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 hover:border-amber-500/40 rounded-xl transition-all cursor-pointer active:scale-95">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                  </svg>
+                  <span>Pause</span>
+                </button>
+
+                <button id="toggle-deep_work" onclick="selectState('deep_work')" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 hover:border-white/10 cursor-pointer text-xs font-semibold text-slate-300 hover:text-white active:scale-95">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                  <span>Deep Work</span>
+                </button>
+
+                <button id="toggle-admin" onclick="selectState('admin')" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 hover:border-white/10 cursor-pointer text-xs font-semibold text-slate-300 hover:text-white active:scale-95">
+                  <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                  <span>Email</span>
+                </button>
+
+                <button id="toggle-meetings" onclick="selectState('meetings')" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 hover:border-white/10 cursor-pointer text-xs font-semibold text-slate-300 hover:text-white active:scale-95">
+                  <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+                  <span>Meetings</span>
+                </button>
+
+                <button id="toggle-rest" onclick="selectState('rest')" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-300 bg-[#12141C] hover:bg-[#1A1D26] border-white/5 hover:border-white/10 cursor-pointer text-xs font-semibold text-slate-300 hover:text-white active:scale-95">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span>Rest</span>
+                </button>
+              </div>
+
+              <!-- Speed & Time details -->
+              <div class="flex items-center justify-center gap-3 text-xs text-slate-500 font-mono mt-1">
+                <div class="flex items-center gap-1">
+                  <div id="trend-icon-container">
+                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                    </svg>
+                  </div>
+                  <span id="trend-text">Paused</span>
+                </div>
+                <div id="tick-timer-divider" class="h-3 w-px bg-white/10 hidden"></div>
+                <div id="tick-countdown-container" class="flex items-center gap-1 hidden">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                  <span id="tick-countdown-text">5.0s</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Coaching Status Dynamic Alert Banner -->
+            <div class="w-full mt-2">
+              <div id="alert-banner" class="p-4 rounded-2xl border transition-all duration-500 flex items-start gap-3 bg-cyan-500/10 border-cyan-500/20 text-cyan-400 text-left">
+                <div id="alert-icon-container">
+                  <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.25h.008v.008H12V18.25Zm0-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM4.25 12a7.75 7.75 0 1 1 15.5 0 7.75 7.75 0 0 1-15.5 0Z" />
+                  </svg>
+                </div>
+                <div class="flex-grow">
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <span class="text-[9px] uppercase tracking-wider font-bold opacity-60">Advisor Guidance</span>
+                    <span class="h-1 w-1 rounded-full bg-current opacity-40"></span>
+                    <h4 id="alert-title" class="font-bold text-xs leading-none">Optimal Steady State</h4>
+                  </div>
+                  <p id="alert-desc" class="text-[11px] opacity-90 leading-normal">Sustained focus. Balance deep sprints with rest sessions.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN (Width ~30% / col-span-4) -->
+        <div class="lg:col-span-4 flex flex-col gap-6 w-full">
+          
+          <!-- Card 1: Energy Trend Line Chart -->
+          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <div class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22" />
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <h3 class="font-display font-semibold text-base text-white truncate">Energy Trend</h3>
+                  <p class="text-xs text-slate-500 font-medium truncate">Budget depletion curve</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 text-[10px] font-mono text-slate-500 shrink-0">
+                <span id="chart-min" class="text-rose-400">Min: 100%</span>
+                <span>/</span>
+                <span id="chart-max" class="text-emerald-400">Max: 100%</span>
+              </div>
+            </div>
+
+            <div class="relative w-full h-[150px] flex items-center justify-center">
+              <div id="chart-empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-[#090A0F]/50 border-2 border-dashed border-white/5 rounded-2xl z-[5]">
+                <p class="text-xs text-slate-400 font-medium">Waiting for coordinates...</p>
+              </div>
+
+              <svg id="trend-svg" class="w-full h-full overflow-hidden hidden" viewBox="0 0 500 150" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="chartAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.15" />
+                    <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.00" />
+                  </linearGradient>
+                  <linearGradient id="lineGlow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#06b6d4" stop-opacity="1" />
+                    <stop offset="100%" stop-color="#0891b2" stop-opacity="1" />
+                  </linearGradient>
+                  <clipPath id="chart-viewport-clip">
+                    <rect x="40" y="10" width="430" height="115" />
+                  </clipPath>
+                </defs>
+                <g id="svg-grid-lines"></g>
+                <path id="svg-area-path" d="" fill="url(#chartAreaGradient)" clip-path="url(#chart-viewport-clip)" />
+                <path id="svg-line-path" d="" fill="none" stroke="url(#lineGlow)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" clip-path="url(#chart-viewport-clip)" />
+                <g id="svg-nodes" clip-path="url(#chart-viewport-clip)"></g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 2: Dynamic Energy Bar Chart -->
+          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col gap-4">
             <div class="flex items-center gap-2">
-              <div class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/10">
+              <div class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 shrink-0">
                 <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18V6a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 6v3.75m-18 0h14.25" />
                 </svg>
               </div>
-              <div>
-                <h3 class="font-display font-semibold text-base text-white">Prototype Sandbox</h3>
-                <p class="text-xs text-slate-500">Accelerate time or modify state</p>
+              <div class="min-w-0">
+                <h3 class="font-display font-semibold text-base text-white truncate">Dynamic Energy Bar</h3>
+                <p class="text-xs text-slate-500 font-medium truncate">Real-time state allocation log</p>
               </div>
             </div>
 
-            <div class="flex items-start gap-2 p-3 bg-cyan-950/20 border border-cyan-500/10 rounded-xl">
-              <p class="text-[10px] text-slate-400 leading-normal">
-                The active state ticks down or up on a repeating loop. Accelerate the velocity using <strong class="text-cyan-400">Turbo</strong> or <strong class="text-cyan-400">Fast</strong> to watch the energy visualizer deplete or charge.
-              </p>
+            <div class="relative w-full h-[150px] flex items-center justify-center">
+              <div id="bar-chart-empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-[#090A0F]/50 border-2 border-dashed border-white/5 rounded-2xl z-[5]">
+                <p class="text-xs text-slate-400 font-medium">Waiting for focus logs...</p>
+              </div>
+              <svg id="bar-svg" class="w-full h-full overflow-hidden hidden" viewBox="0 0 500 150" preserveAspectRatio="none"></svg>
             </div>
           </div>
 
-          <div class="hidden lg:block w-px bg-white/5"></div>
+          <!-- Quick Energy Overrides Card -->
+          <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <div class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">
+                  <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-display font-semibold text-base text-white">Quick Energy Overrides</h3>
+                  <p class="text-[11px] text-slate-500 font-medium font-mono">Immediate adjustments</p>
+                </div>
+              </div>
 
-          <!-- Manual Adjusters -->
-          <div class="flex flex-col gap-2.5 justify-center lg:w-1/3">
-            <label class="text-xs font-semibold text-slate-400">Manual Energy Injection</label>
-            <div class="grid grid-cols-3 gap-2">
-              <button onclick="adjustEnergy(-10)" class="py-2.5 text-xs font-semibold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl cursor-pointer active:scale-95 transition-all">-10 pts</button>
-              <button onclick="resetEnergy()" class="py-2.5 text-xs font-bold text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/25 rounded-xl cursor-pointer active:scale-95 transition-all">Reset 100</button>
-              <button onclick="adjustEnergy(10)" class="py-2.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-xl cursor-pointer active:scale-95 transition-all">+10 pts</button>
+              <!-- Quick Overrides Pill Outlines -->
+              <div class="grid grid-cols-2 gap-2.5">
+                <button onclick="quickOverride('coffee')" class="flex items-center justify-center gap-1.5 py-2.5 px-3 text-xs font-bold text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/15 border border-emerald-500/30 hover:border-emerald-500/60 rounded-full transition-all cursor-pointer active:scale-95 shadow-[0_0_8px_rgba(16,185,129,0.1)]">
+                  <span>☕ Coffee +15</span>
+                </button>
+                <button onclick="quickOverride('emergency')" class="flex items-center justify-center gap-1.5 py-2.5 px-3 text-xs font-bold text-rose-400 bg-rose-500/5 hover:bg-rose-500/15 border border-rose-500/30 hover:border-rose-500/60 rounded-full transition-all cursor-pointer active:scale-95 shadow-[0_0_8px_rgba(244,63,94,0.1)]">
+                  <span>🚨 Emergency -20</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          <div class="hidden lg:block w-px bg-white/5"></div>
+        </div>
 
-          <!-- Tick velocity configuration -->
-          <div class="flex flex-col gap-2.5 justify-center lg:w-1/3">
-            <div class="flex items-center justify-between">
-              <label class="text-xs font-semibold text-slate-400">Clock Tick Velocity</label>
-              <span id="speed-indicator" class="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded">Normal</span>
+      </div>
+
+      <!-- ROW 3: BOTTOM ROW (Full Width Sandbox) -->
+      <div class="bg-[#12141C] rounded-3xl p-6 shadow-lg border border-white/5 flex flex-col lg:flex-row items-stretch gap-6 w-full z-10 relative">
+        
+        <div class="flex flex-col gap-3 lg:w-1/3 justify-between">
+          <div class="flex items-center gap-2">
+            <div class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/10">
+              <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+              </svg>
             </div>
-            <div class="grid grid-cols-3 gap-2 bg-[#090A0F] p-1 rounded-xl border border-white/5">
-              <button id="speed-5000" onclick="setTickSpeed(5000)" class="py-2 text-[11px] font-medium rounded-lg transition-all cursor-pointer bg-[#12141C] text-cyan-400 border border-white/5">Normal (5s)</button>
-              <button id="speed-2000" onclick="setTickSpeed(2000)" class="py-2 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200">Fast (2s)</button>
-              <button id="speed-500" onclick="setTickSpeed(500)" class="py-2 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200">Turbo (0.5s)</button>
+            <div>
+              <h3 class="font-display font-semibold text-base text-white">Prototype Sandbox</h3>
+              <p class="text-xs text-slate-500">Accelerate time or modify state</p>
             </div>
           </div>
 
+          <div class="flex items-start gap-2 p-3 bg-cyan-950/20 border border-cyan-500/10 rounded-xl">
+            <p class="text-[10px] text-slate-400 leading-normal">
+              The active state ticks down or up on a repeating loop. Accelerate the velocity using <strong class="text-cyan-400">Turbo</strong> or <strong class="text-cyan-400">Fast</strong> to watch the energy visualizer deplete or charge.
+            </p>
+          </div>
+        </div>
+
+        <div class="hidden lg:block w-px bg-white/5"></div>
+
+        <!-- Manual Adjusters -->
+        <div class="flex flex-col gap-2.5 justify-center lg:w-1/3">
+          <label class="text-xs font-semibold text-slate-400">Manual Energy Injection</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button onclick="adjustEnergy(-10)" class="py-2.5 text-xs font-semibold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl cursor-pointer active:scale-95 transition-all">-10 pts</button>
+            <button onclick="resetEnergy()" class="py-2.5 text-xs font-bold text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/25 rounded-xl cursor-pointer active:scale-95 transition-all">Reset 100</button>
+            <button onclick="adjustEnergy(10)" class="py-2.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-xl cursor-pointer active:scale-95 transition-all">+10 pts</button>
+          </div>
+        </div>
+
+        <div class="hidden lg:block w-px bg-white/5"></div>
+
+        <!-- Tick velocity configuration -->
+        <div class="flex flex-col gap-2.5 justify-center lg:w-1/3">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-400">Clock Tick Velocity</label>
+            <span id="speed-indicator" class="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded">Normal</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 bg-[#090A0F] p-1 rounded-xl border border-white/5">
+            <button id="speed-5000" onclick="setTickSpeed(5000)" class="py-2 text-[11px] font-medium rounded-lg transition-all cursor-pointer bg-[#12141C] text-cyan-400 border border-white/5">Normal (5s)</button>
+            <button id="speed-2000" onclick="setTickSpeed(2000)" class="py-2 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200">Fast (2s)</button>
+            <button id="speed-500" onclick="setTickSpeed(500)" class="py-2 text-[11px] font-medium rounded-lg transition-all cursor-pointer text-slate-400 hover:text-slate-200">Turbo (0.5s)</button>
+          </div>
         </div>
 
       </div>
@@ -520,6 +547,9 @@
         tickInterval: 5000,
         msRemaining: 5000,
         selectedTheme: 'classic',
+        streak: parseInt(localStorage.getItem('focus_streak') || '0', 10),
+        hasHitZeroThisSprint: false,
+        lastStreakMilestone: 0,
         logs: [
           { id: 'initial', timestamp: getFormattedTime(), value: 100, state: 'idle', change: 0 }
         ],
@@ -552,8 +582,12 @@
         state.selectedTheme = themeValue;
         document.documentElement.classList.remove('theme-classic', 'theme-cyberpunk', 'theme-sage');
         document.documentElement.classList.add(`theme-${themeValue}`);
+        
         const selectCard = document.getElementById('theme-select-card');
         if (selectCard) selectCard.value = themeValue;
+        const selectHeader = document.getElementById('header-theme-select');
+        if (selectHeader) selectHeader.value = themeValue;
+        
         updateUI();
       }
 
@@ -566,6 +600,9 @@
 
         if (diff !== 0) {
           state.energy = next;
+          if (state.energy <= 0) {
+            state.hasHitZeroThisSprint = true;
+          }
           state.logs.push({ id: `override-${Date.now()}`, timestamp: getFormattedTime(), value: next, state: state.activeState, change: diff, label });
           updateUI();
         }
@@ -680,6 +717,12 @@
           pauseBtn.className = "flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold text-slate-400 hover:text-amber-400 bg-amber-500/5 hover:bg-amber-500/10 border border-white/5 hover:border-amber-500/25 rounded-xl cursor-pointer active:scale-95 transition-all";
         }
 
+        // Focus Streak display update
+        const streakText = document.getElementById('streak-counter');
+        if (streakText) {
+          streakText.innerText = `${state.streak} Sprint${state.streak === 1 ? '' : 's'}`;
+        }
+
         // Dynamic Alert Banner Based on Thresholds
         const banner = document.getElementById('alert-banner');
         const titleEl = document.getElementById('alert-title');
@@ -760,7 +803,7 @@
         const gridLinesG = document.getElementById('svg-grid-lines');
         gridLinesG.innerHTML = '';
 
-        const width = 500, height = 180;
+        const width = 500, height = 150;
         const paddingLeft = 45, paddingRight = 35, paddingTop = 20, paddingBottom = 30;
         const chartWidth = width - paddingLeft - paddingRight;
         const chartHeight = height - paddingTop - paddingBottom;
@@ -880,7 +923,7 @@
         });
         svg.appendChild(defs);
 
-        const width = 500, height = 180;
+        const width = 500, height = 150;
         const paddingLeft = 45, paddingRight = 35, paddingTop = 20, paddingBottom = 30;
         const chartWidth = width - paddingLeft - paddingRight;
         const chartHeight = height - paddingTop - paddingBottom;
@@ -981,6 +1024,8 @@
         state.energy = 100;
         state.activeState = 'idle';
         state.msRemaining = state.tickInterval;
+        state.hasHitZeroThisSprint = false;
+        // Keep focus streak, do not reset it here as requested
         state.logs = [{ id: `reset-${Date.now()}`, timestamp: getFormattedTime(), value: 100, state: 'idle', change: 0 }];
         state.stateDurations = { idle: 0, deep_work: 0, admin: 0, meetings: 0, rest: 0 };
         updateUI();
@@ -992,6 +1037,9 @@
         const diff = next - prev;
         if (diff !== 0) {
           state.energy = next;
+          if (state.energy <= 0) {
+            state.hasHitZeroThisSprint = true;
+          }
           state.logs.push({ id: `manual-${Date.now()}`, timestamp: getFormattedTime(), value: next, state: state.activeState, change: diff, label: 'Manual Adjustment' });
           updateUI();
         }
@@ -1022,9 +1070,25 @@
         const step = 100;
         state.stateDurations[state.activeState] += step / 1000;
 
+        // Keep track of Focus Streak milestones (every 5 minutes / 300 seconds)
+        const totalSecs = Object.values(state.stateDurations).reduce((a, b) => a + b, 0);
+        const currentMilestone = Math.floor(totalSecs / 300);
+
+        if (currentMilestone > state.lastStreakMilestone) {
+          // Crosses a milestone! Check if energy level hasn't hit 0% during this sprint
+          if (!state.hasHitZeroThisSprint && state.energy > 0) {
+            state.streak++;
+            localStorage.setItem('focus_streak', state.streak);
+          }
+          state.lastStreakMilestone = currentMilestone;
+        }
+
+        if (state.energy <= 0) {
+          state.hasHitZeroThisSprint = true;
+        }
+
         if (state.activeState === 'idle') {
           // Sync runtime session clocks even while paused
-          const totalSecs = Object.values(state.stateDurations).reduce((a, b) => a + b, 0);
           document.getElementById('session-time').innerText = formatDuration(totalSecs);
           return;
         }
@@ -1037,6 +1101,9 @@
           const diff = next - prev;
 
           state.energy = next;
+          if (state.energy <= 0) {
+            state.hasHitZeroThisSprint = true;
+          }
           state.logs.push({ id: `tick-${Date.now()}`, timestamp: getFormattedTime(), value: next, state: state.activeState, change: diff });
           state.msRemaining = state.tickInterval;
         }
