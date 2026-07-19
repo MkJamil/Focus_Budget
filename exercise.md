@@ -32,8 +32,8 @@ We will be using the vibe coding feature in **AI Studio** to generate our initia
 
 ### Deliverables for this afternoon: 
 
-- [] complete the environment initialization
-- [] write the basic API endpoints
-- [] push the code to a new GitHub repository.
+- [ ] complete the environment initialization
+- [ ] write the basic API endpoints
+- [ ] push the code to a new GitHub repository.
 
 > This is the submission for **19th of July** task
